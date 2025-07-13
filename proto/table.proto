@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package substrait_table;
+
+// This file describes wire protocols of table definition.
+
+// Single table is described like this.
+message Table {
+  repeated Column columns = 1;
+  repeated Row rows = 2;
+}
+
+// Each column has its own name and type.
+message Column {
+  string name = 1;
+  DataType type = 2;
+}
+
+message DataType {
+  oneof kind {
+    PrimitiveType primitive = 1;
+    EnumType enum_type = 2;
+  }
+
+  message PrimitiveType {
+    enum Type {
+      UNSPECIFIED = 0;
+      INT32 = 1;
+      INT64 = 2;
+      FLOAT = 3;
+      DOUBLE = 4;
+      STRING = 5;
+      TIMESTAMP = 6;
+      BOOLEAN = 7;
+    }
+    Type type = 1;
+  }
+
+  message EnumType {
+    string name = 1;
+    repeated string values = 2;
+  }
+}
+
+// Single row could contains multiple cells.
+message Row {
+  repeated Value values = 1;
+}
+
+// Values in a cell.
+message Value {
+  oneof data {
+    int32 int32_value = 1;
+    int64 int64_value = 2;
+    float float_value = 3;
+    double double_value = 4;
+    string string_value = 5;
+    int64 timestamp_value = 6;  // Nanosec from the UNIX epoch.
+    bool boolean_value = 7;
+    string enum_value = 8; // Enum is handled as a string.
+    bool null_value = 9;   // To describe NULL.
+  }
+}
