@@ -1,0 +1,72 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <memory>
+
+#include "generated/substrait/plan.pb.h"
+
+namespace iris_merge {
+
+// A class to represent a table in the Iris Merge engine.
+class Table {
+public:
+    // Constructs a new Table object.
+    //
+    // @param name The name of the table.
+    // @param schema The schema of the table.
+    Table(const std::string& name, const std::vector<std::string>& schema);
+
+    // Destroys the Table object.
+    ~Table();
+
+    // Returns the name of the table.
+    const std::string& GetName() const;
+
+    // Returns the schema of the table.
+    const std::vector<std::string>& GetSchema() const;
+
+private:
+    std::string name_;
+    std::vector<std::string> schema_;
+};
+
+// The main class for the Iris Merge engine.
+class IrisMerge {
+public:
+    // Constructs a new IrisMerge object.
+    IrisMerge();
+
+    // Destroys the IrisMerge object.
+    ~IrisMerge();
+
+    // Creates a new table in the engine.
+    //
+    // @param name The name of the table.
+    // @param schema The schema of the table.
+    // @return A pointer to the new table, or nullptr if the table already exists.
+    Table* CreateTable(const std::string& name, const std::vector<std::string>& schema);
+
+    // Returns the table with the given name.
+    //
+    // @param name The name of the table.
+    // @return A pointer to the table, or nullptr if the table does not exist.
+    Table* GetTable(const std::string& name);
+
+    // Drops the table with the given name..
+    //
+    // @param name The name of the table.
+    // @return True if the table was dropped, false otherwise.
+    bool DropTable(const std::string& name);
+
+    // Executes a DML plan.
+    //
+    // @param plan The Substrait plan to execute.
+    // @return True if the plan was executed successfully, false otherwise.
+    bool ExecuteDML(const ::substrait::Plan& plan);
+
+private:
+    std::vector<std::unique_ptr<Table>> tables_;
+};
+
+} // namespace iris_merge

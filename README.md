@@ -1,7 +1,7 @@
 # Iris Merge
 
-Iris Merge is a new storage engine which takes Substrait protobuf as input and returns aggregated or joined input table.
-Internally, Iris Merge supports journaling which enables users to get rapid respond to write requests.
-On the other hand, Iris Merge stores storage like *Log Structured Row Table*. The periodical internal merge operation makes each updated or inserted row into a single big parquet table.
-It maintains multiple parquet table and supports JOIN operation across them.
+Iris Merge is a new storage engine that takes Substrait protobuf as input and returns aggregated or joined tables.
+Internally, Iris Merge supports journaling, which enables users to get rapid responses to write requests.
+Iris Merge uses a storage format similar to a *Log-Structured Row Table*. A periodic internal merge operation consolidates updated and inserted rows into a single large Parquet table.
+It maintains multiple Parquet tables and supports JOIN operations across them.
 
